@@ -2,12 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TaskDTO } from '../dtos/task.dto';
+import { UserDTO } from '../dtos/user.dto';
 import { Task } from '../entities/task.entity';
-// import { User } from '../entities/user.entity';
-// import { UserDTO } from '../dtos/user.dto';
 
 @Injectable()
-export class UserService {
+export class TaskService {
   constructor(
     @InjectRepository(Task)
     private readonly repository: Repository<Task>,
@@ -15,34 +14,44 @@ export class UserService {
 
   async findAll(): Promise<Task[]> {
     try {
-      const tasks = await this.repository.find({});
+      const tasks = await this.repository.find({ relations: ['user'] });
       return tasks;
     } catch (e) {
       console.log(e);
     }
   }
 
-  async findById(id:number): Promise<Task> {
+  async findById(id: number): Promise<Task> {
     try {
-      const task = await this.repository.findOne({where:{id}});
+      const task = await this.repository.findOne({
+        where: { id },
+        relations: ['user'],
+      });
       return task;
     } catch (e) {
       console.log(e);
     }
   }
 
-  async create(taskDTO: TaskDTO): Promise<Task> {
+  async create(task: TaskDTO, user: UserDTO): Promise<Task> {
+    const newTask = this.repository.create({
+      ...task,
+      user: user,
+    });
+    if (!newTask) {
+      throw new Error('Task is not created!');
+    }
     try {
-      const task = await this.repository.save(taskDTO);
+      const task = await this.repository.save(newTask);
       return task;
     } catch (e) {
       console.log(e);
     }
   }
 
-  async update(id:number, taskDTO: TaskDTO): Promise<Task> {
+  async update(id: number, task: TaskDTO): Promise<Task> {
     try {
-      const user = await this.repository.update(id, taskDTO);
+      const user = await this.repository.update(id, task);
       return user as unknown as Task;
     } catch (e) {
       console.log(e);

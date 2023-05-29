@@ -6,15 +6,14 @@ import {
   HttpStatus,
   Param,
   Post,
-  Put,
+  Put
 } from '@nestjs/common';
-import { UserService } from '../services/user.service';
-import { UserDTO } from '../dtos/user.dto';
-import { validate } from 'class-validator';
+import { TaskDTO } from '../dtos/task.dto';
+import { TaskService } from '../services/task.service';
 
-@Controller('v1/user')
-export class UserController {
-  constructor(private readonly service: UserService) {}
+@Controller('v1/task')
+export class TaskController {
+  constructor(private readonly service: TaskService) {}
 
   @Get()
   async findAll() {
@@ -35,27 +34,21 @@ export class UserController {
   }
 
   @Post()
-  async create(@Body() userDto: UserDTO) {
-    validate(userDto).then((err) => {
-      if (err) {
-        return err;
-      } else {
-        return;
-      }
-    });
+  async create(@Body() task: TaskDTO) {
+    const {user, ...rest} = task;
     try {
-      const user = await this.service.create(userDto);
-      return user;
+      const task = await this.service.create(rest, user);
+      return task;
     } catch (e) {
       console.log(e);
     }
   }
 
   @Put(':id')
-  async update(@Param('id') id: number, @Body() userDto: UserDTO) {
+  async update(@Param('id') id: number, @Body() task: TaskDTO) {
     try {
-      const user = await this.service.update(id, userDto);
-      return user;
+      const newTask = await this.service.update(id, task);
+      return newTask;
     } catch (e) {
       console.log(e);
     }

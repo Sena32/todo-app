@@ -3,6 +3,7 @@
 /node_modules
 package-lock.json
 .env
+model-api.json
 
 # Logs
 logs

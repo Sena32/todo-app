@@ -1,0 +1,33 @@
+// User
+    {
+        "id":"1",
+        "name":"Ailton",
+        "lastName":"Sena",
+        "cpf":"123",
+        "email":"teste@teste.com",
+        "address":"1"
+    }
+
+
+// Address
+    {
+        "id":"1",
+        "street":"rua teste",
+        "number":"19",
+        "city":"19",
+        "state":"19",
+        "country":"19",
+        "cep":"123"
+    }
+
+
+// Task
+{
+    "id":"1",
+    "idUser":"1",
+    "title":"19",
+    "description":"19",
+    "state":"19",
+    "country":"19",
+    "cep":"123"
+}
